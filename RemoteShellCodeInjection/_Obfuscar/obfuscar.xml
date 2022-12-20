@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Include>
+  <Var name="RegenerateDebugInfo" value="true" />
+  <Var name="MarkedOnly" value="false" />
+  <Var name="RenameProperties" value="true" />
+  <Var name="RenameEvents" value="true" />
+  <Var name="RenameFields" value="true" />
+  <Var name="KeepPublicApi" value="true" />
+  <Var name="HidePrivateApi" value="true" />
+  <Var name="ReuseNames" value="true" />
+  <Var name="HideStrings" value="true" />
+  <Var name="OptimizeMethods" value="true" />
+  <Var name="SuppressIldasm" value="true" />
+  <Var name="AnalyzeXaml" value="true" />
+  <Var name="UseUnicodeNames" value="true" />
+  <Var name="UseKoreanNames" value="true" />
+  <Module file="$(InPath)\RemoteShellCodeInjection.dll">
+    <SkipType name="*AnonymousType*" skipProperties="true" skipMethods="true" skipFields="true" skipEvents="true" skipStringHiding="true" />
+  </Module>
+  <AssemblySearchPath path="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\6.0.3\ref\net6.0\" />
+</Include>
