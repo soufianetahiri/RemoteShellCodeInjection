@@ -10,8 +10,8 @@
     <PlatformTarget>x64</PlatformTarget>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <SignAssembly>False</SignAssembly>
-    <AssemblyName>X</AssemblyName>
-    <RootNamespace>X</RootNamespace>
+    <AssemblyName>$([System.DateTime]::Now.ToString("yyyy_mm_dd_hh-mm-ss "))</AssemblyName>
+    <RootNamespace>$([System.DateTime]::Now.ToString("yyyy_mm_dd_hh-mm-ss "))</RootNamespace>
     <NoWin32Manifest>true</NoWin32Manifest>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -23,9 +23,5 @@
     <FileAlignment>1024</FileAlignment>
   </PropertyGroup>
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="echo Release@@Any CPU&#xD;&#xA;if &quot;$(ConfigurationName)&quot; == &quot;Release&quot; (if &quot;$(PlatformName)&quot; == &quot;AnyCPU&quot; (&quot;$(ProjectDir)_Obfuscar\Obfuscar.Console.exe&quot; &quot;$(ProjectDir)_Obfuscar\obfuscar_Release_Any_CPU.xml&quot;&#xD;&#xA;xcopy /e /v &quot;$(ProjectDir)bin\Release\net6.0\\Out\&quot; &quot;$(ProjectDir)bin\Release\net6.0\&quot; /Y))" />
   </Target>
-  <ItemGroup>
-    <None Include="..\.editorconfig" Link=".editorconfig" />
-  </ItemGroup>
 </Project>

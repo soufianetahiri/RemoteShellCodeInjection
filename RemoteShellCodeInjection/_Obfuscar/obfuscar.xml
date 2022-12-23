@@ -14,8 +14,8 @@
   <Var name="AnalyzeXaml" value="true" />
   <Var name="UseUnicodeNames" value="true" />
   <Var name="UseKoreanNames" value="true" />
-  <Module file="$(InPath)\RemoteShellCodeInjection.dll">
-    <SkipType name="*AnonymousType*" skipProperties="true" skipMethods="true" skipFields="true" skipEvents="true" skipStringHiding="true" />
+  <Module file="$(InPath)\X.dll">
+    <SkipType name="*AnonymousType*" skipProperties="false" skipMethods="false" skipFields="false" skipEvents="false" skipStringHiding="false" />
   </Module>
   <AssemblySearchPath path="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\6.0.3\ref\net6.0\" />
 </Include>
