@@ -35,7 +35,7 @@ I added an obfuscator (obfuscar) with the following settings:
 
  -  -url: url where your shellcode is hosted
  -  -pname: the process you want to inject into
- -  -selfinject: if you don't use -pname, it will injects the shellcode on the running process
+ -  -selfinject: if you don't use -pname, it will inject the shellcode on the running process
  -  -key: the b64 key to decrypt your shellcode if you AES encrypted it,
  
 ## Credits
