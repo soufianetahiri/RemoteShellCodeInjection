@@ -34,9 +34,9 @@ I added an obfuscator (obfuscar) with the following settings:
 ## Usage
 
  -  -url: url where your shellcode is hosted
- -   -pname: the process you want to inject into
- -   --self-inject: if you don't use -pname, it will injects the shellcode on the running process
- -   -key: the b64 key to decrypt your shellcode if you AES encrypted it,
+ -  -pname: the process you want to inject into
+ -  -selfinject: if you don't use -pname, it will injects the shellcode on the running process
+ -  -key: the b64 key to decrypt your shellcode if you AES encrypted it,
  
 ## Credits
 The API unhooking (ntdll.dll, kernel32.dll, advapi32.dll, and kernelbase.dll),EAT hooks, IAT hooks, and JMP/Hot-patch/Inline hooks, AMSI and ETW patches are totally stolen from https://github.com/GetRektBoy724/SharpUnhooker 
